@@ -129,7 +129,7 @@
 <meta property="og:image" content="https://jywhy6.github.io/files/decrypt-bm2dxum/cipher.png">
 <meta property="og:image" content="https://jywhy6.github.io/files/decrypt-bm2dxum/great.gif">
 <meta property="article:published_time" content="2019-12-20T20:28:16.000Z">
-<meta property="article:modified_time" content="2019-12-21T15:16:00.745Z">
+<meta property="article:modified_time" content="2019-12-21T17:02:40.876Z">
 <meta property="article:author" content="jywhy6">
 <meta property="article:tag" content="音游">
 <meta property="article:tag" content="逆向工程">
@@ -411,12 +411,24 @@
                 
               
 
-              <time title="Created: 2019-12-21 04:28:16 / Modified: 23:16:00" itemprop="dateCreated datePublished" datetime="2019-12-21T04:28:16+08:00">2019-12-21</time>
+              <time title="Created: 2019-12-21 04:28:16" itemprop="dateCreated datePublished" datetime="2019-12-21T04:28:16+08:00">2019-12-21</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-12-22 01:02:40" itemprop="dateModified" datetime="2019-12-22T01:02:40+08:00">2019-12-22</time>
               
             
           </span>
@@ -521,7 +533,7 @@
 <p>（注：当然还有另一种思路，就是 Hook 解密函数，在 App 运行时把解密好的文件从内存中 Dump 出来。由于我个人只做过 Objective-C 函数的 Hook，而对 C/C++ 函数 Hook 中的内存、文件读写不是很熟悉，就没有走这条路。）</p>
 <h1 id="还原符号"><a href="# 还原符号" class="headerlink" title="还原符号"></a>还原符号 </h1><p> 既然选择了远方，便只顾风雨兼程。IDA，启动！把 ipa 包里的可执行 Mach-O 文件 bm2dxum 扔进去分析一番，可以看到少数带 Unity 关键字的 Objective-C 函数，和一堆……sub_函数。搜索了一波 crypt 之类的关键字，除了几个 Objective-C 的 hash 函数以外没有结果。看来 Unity 偷偷把游戏中用到的很多函数名都隐藏掉了，真是个小机灵鬼！</p>
 <p><img src="/files/decrypt-bm2dxum/crypt_search.png" alt=""></p>
-<p>那么，我们有方法恢复这些函数符号吗？答案当然是 YES。<a href="https://github.com/Perfare/Il2CppDumper/" target="_blank" rel="noopener">Il2CppDumper</a>，启动！把 bm2dxum 和 global-metadata.dat 放进去，<strong>随便个 2018.4 之类的版本</strong>，让软件自动分析，就得到了 dump.cs（内含类与函数的声明、地址信息）、stringliteral.json（内含字符串常量及其地址）、script.py（IDA 专用脚本，用于还原函数名信息）。</p>
+<p>那么，我们有方法恢复这些函数符号吗？答案当然是 YES。<a href="https://github.com/Perfare/Il2CppDumper/" target="_blank" rel="noopener">Il2CppDumper</a>，启动！把 bm2dxum 和 global-metadata.dat 放进去，<strong>随便填个 2018.4 之类的版本</strong>，让软件自动分析，就得到了 dump.cs（内含类与函数的声明、地址信息）、stringliteral.json（内含字符串常量及其地址）、script.py（IDA 专用脚本，用于还原函数名信息）。</p>
 <p>在 IDA 中选择 File – Script File，载入 script.py，让它慢慢跑一会儿，之前那些被隐藏的函数名便重新浮出水面。至此，符号还原工作已经完成。</p>
 <h1 id="寻找加解密函数"><a href="# 寻找加解密函数" class="headerlink" title="寻找加解密函数"></a>寻找加解密函数 </h1><p> 既然函数名已经全部暴露，而且函数名完全没有混淆，接下来的逆向分析工作就简单不少了。直接搜索 assetbundle、crypt、cipher 之类的关键字，筛选出一些可能与资源加解密相关的函数（这里找 <code>AssetBundleList</code> 类的原因是，前面在资源文件夹中看到过 ablist.json 这个文件，还记得吗？）：</p>
 <p><img src="/files/decrypt-bm2dxum/assetbundle_search.png" alt=""></p>
@@ -533,7 +545,7 @@
 <p><img src="/files/decrypt-bm2dxum/AssetBundleCryptoStream_ctor.png" alt=""></p>
 <p>好的，那么接下来可以看它具体是如何实现这个 <code>CreateAesStream</code> 的了。从 IDA F5 结果中可以看到，首先是调用了 <code>PasswordDeriveBytes$$.ctor</code> 这个函数构造出来一个类的实例，然后我们看看实例的交叉引用：<code>(*(*pdb_self + 376))(pdb_self, (v14 &gt;&gt; 3), *(*pdb_self + 384));</code>……</p>
 <p><img src="/files/decrypt-bm2dxum/kick.jpg" alt=""></p>
-<p>WTF！？还让不让人好好分析了？<strong>看 dump.cs 似乎只能找到类变量的偏移</strong>，而看不出这个 +375 到底是调用的啥函数。</p>
+<p>WTF！？还让不让人好好分析了？<strong>看 dump.cs 似乎只能找到类变量的偏移</strong>，而看不出这个 +376 到底是调用的啥函数。</p>
 <p>失望、苦恼之际，我突然想到：直接动态调试一遍，选择进入函数，然后把 lldb 里的地址减掉 ASLR，不就是真实的函数地址了吗？立刻行动，然后用类似的方法，把整个函数的逻辑找了出来，原来是先用 <code>PasswordDeriveBytes</code> 生成密钥，然后再使用 AES_128_ECB 模式进行加解密（做到这里我有点纳闷：为什么使用 ECB 这一不足够安全的模式呢？）：</p>
 <p><img src="/files/decrypt-bm2dxum/CreateAesStream.png" alt=""></p>
 <h1 id="实现加解密函数（一）"><a href="# 实现加解密函数（一）" class="headerlink" title="实现加解密函数（一）"></a>实现加解密函数（一）</h1><p>接下来差不多可以实现加解密函数了吧。通过 Google 搜索，我发现，<code>PasswordDeriveBytes</code>、<code>AesManaged</code>等都是微软的.NET Core 里的类，这意味着，咱们可以滴滴偷代码了。我之前没有 C# 开发经验，于是这次花了几个小时安装.NET Core 环境、学习 C# 基本语法、阅读 <a href="https://docs.microsoft.com/en-us/dotnet/api/" target="_blank" rel="noopener"> 微软官方文档 </a>，然后<strong> 使用正确的 key、iv 和 mode 进行解密</strong>……</p>
