@@ -1775,7 +1775,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #feff7c;
+  background: #c6ffff;
 }
 .feed-link,
 .chat {
@@ -2619,9 +2619,7 @@ hr {
   }
 }
 .posts-expand .post-body img {
-  margin: auto;
-  max-width: 50%;
-  max-height: 200px;
+  margin: 0;
 }
 .posts-expand .post-tags {
   text-align: left;
@@ -2725,4 +2723,12 @@ hr {
     width: auto;
     text-align: center;
   }
+}
+.post-body p {
+  text-indent: 2em;
+}
+.posts-expand .post-body img {
+  margin: auto;
+  max-width: 50%;
+  max-height: 200px;
 }
