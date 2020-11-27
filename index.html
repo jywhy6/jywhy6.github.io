@@ -368,7 +368,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2020/11/27/clang-notes/" class="post-title-link" itemprop="url">clang-notes</a>
+                <a href="/2020/11/27/clang-notes/" class="post-title-link" itemprop="url">LLVM 编译器前端 Clang AST & API 笔记</a>
               
             
           </h1>
@@ -393,7 +393,7 @@
                 
               
 
-              <time title="Created: 2020-11-27 18:16:42 / Modified: 17:49:01" itemprop="dateCreated datePublished" datetime="2020-11-27T18:16:42+08:00">2020-11-27</time>
+              <time title="Created: 2020-11-27 22:10:52 / Modified: 22:23:38" itemprop="dateCreated datePublished" datetime="2020-11-27T22:10:52+08:00">2020-11-27</time>
             
 
             
@@ -403,6 +403,24 @@
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">软件工程</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -426,7 +444,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article: </span>
                 
-                <span title="Symbols count in article">9.3k</span>
+                <span title="Symbols count in article">9.5k</span>
               
 
               
@@ -461,90 +479,20 @@
 
       
         
+          <p><img src="/files/clang-notes/llvm.png" alt=""></p>
+<blockquote>
+<p>LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C/C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Java 字节码、Objective-C、Swift、Python、Ruby、Crystal、Rust、Scala 以及 C# 等语言。<br>（摘录自中文维基百科，有改动）</p>
+</blockquote>
+<p>这篇博文是我学习 LLVM 编译器架构的编译器前端 Clang 的笔记。</p>
+          <!--noindex-->
           
-            <h1 id="LLVM- 编译器前端 -Clang-AST-amp-API- 笔记"><a href="#LLVM- 编译器前端 -Clang-AST-amp-API- 笔记" class="headerlink" title="LLVM 编译器前端 Clang AST &amp; API 笔记"></a>LLVM 编译器前端 Clang AST &amp; API 笔记 </h1><h2 id="参考资料"><a href="# 参考资料" class="headerlink" title="参考资料"></a> 参考资料 </h2><h3 id="课程 -Slides"><a href="# 课程 -Slides" class="headerlink" title="课程 Slides"></a> 课程 Slides</h3><p><a href="http://swtv.kaist.ac.kr/courses/cs492-fall18" target="_blank" rel="noopener">CS492A Automated Software Analysis, Fall 18</a></p>
-<h3 id="Clang-AST- 相关"><a href="#Clang-AST- 相关" class="headerlink" title="Clang AST 相关"></a>Clang AST 相关</h3><p><a href="https://blog.csdn.net/hatter110/article/details/107282596" target="_blank" rel="noopener">Clang AST 基础学习</a></p>
-<p><a href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html" target="_blank" rel="noopener">Introduction to the Clang AST</a></p>
-<p><a href="https://www.youtube.com/watch?v=b8JTwPz5dSw" target="_blank" rel="noopener">2013 EuroLLVM Developers’ Meeting: “The Clang AST - a tutorial”</a></p>
-<h3 id="RecursiveASTVisitor- 相关"><a href="#RecursiveASTVisitor- 相关" class="headerlink" title="RecursiveASTVisitor 相关"></a><code>RecursiveASTVisitor</code> 相关</h3><p><a href="https://releases.llvm.org/7.0.0/tools/clang/docs/RAVFrontendAction.html" target="_blank" rel="noopener">How to write RecursiveASTVisitor based ASTFrontendActions.</a></p>
-<p><a href="https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html" target="_blank" rel="noopener">clang::RecursiveASTVisitor&lt; Derived &gt; Class Template Reference</a></p>
-<h3 id="ASTMatcher- 相关"><a href="#ASTMatcher- 相关" class="headerlink" title="ASTMatcher 相关"></a><code>ASTMatcher</code> 相关</h3><p><a href="https://blog.csdn.net/hatter110/article/details/107282775" target="_blank" rel="noopener">Clang ASTMatcher 基础学习</a></p>
-<p><a href="https://clang.llvm.org/docs/LibASTMatchers.html" target="_blank" rel="noopener">Matching the Clang AST</a></p>
-<p><a href="https://clang.llvm.org/docs/LibASTMatchersReference.html" target="_blank" rel="noopener">AST Matcher Reference</a></p>
-<h2 id="Learn-Clang-AST-by-Example"><a href="#Learn-Clang-AST-by-Example" class="headerlink" title="Learn Clang AST by Example"></a>Learn Clang AST by Example</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.cc</span><br><span class="line">int f(int x) &#123;</span><br><span class="line">  int result &#x3D; (x &#x2F; 42);</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Clang by default is a frontend for many tools; -Xclang is used to pass</span><br><span class="line"># options directly to the C++ frontend.</span><br><span class="line">$ clang -Xclang -ast-dump -fsyntax-only test.cc</span><br><span class="line">TranslationUnitDecl 0x5aea0d0 &lt;&lt;invalid sloc&gt;&gt;</span><br><span class="line">... cutting out internal declarations of clang ...</span><br><span class="line">&#96;-FunctionDecl 0x5aeab50 &lt;test.cc:1:1, line:4:1&gt; f &#39;int (int)&#39;</span><br><span class="line">  |-ParmVarDecl 0x5aeaa90 &lt;line:1:7, col:11&gt; x &#39;int&#39;</span><br><span class="line">  &#96;-CompoundStmt 0x5aead88 &lt;col:14, line:4:1&gt;</span><br><span class="line">    |-DeclStmt 0x5aead10 &lt;line:2:3, col:24&gt;</span><br><span class="line">    | &#96;-VarDecl 0x5aeac10 &lt;col:3, col:23&gt; result &#39;int&#39;</span><br><span class="line">    |   &#96;-ParenExpr 0x5aeacf0 &lt;col:16, col:23&gt; &#39;int&#39;</span><br><span class="line">    |     &#96;-BinaryOperator 0x5aeacc8 &lt;col:17, col:21&gt; &#39;int&#39; &#39;&#x2F;&#39;</span><br><span class="line">    |       |-ImplicitCastExpr 0x5aeacb0 &lt;col:17&gt; &#39;int&#39; &lt;LValueToRValue&gt;</span><br><span class="line">    |       | &#96;-DeclRefExpr 0x5aeac68 &lt;col:17&gt; &#39;int&#39; lvalue ParmVar 0x5aeaa90 &#39;x&#39; &#39;int&#39;</span><br><span class="line">    |       &#96;-IntegerLiteral 0x5aeac90 &lt;col:21&gt; &#39;int&#39; 42</span><br><span class="line">    &#96;-ReturnStmt 0x5aead68 &lt;line:3:3, col:10&gt;</span><br><span class="line">      &#96;-ImplicitCastExpr 0x5aead50 &lt;col:10&gt; &#39;int&#39; &lt;LValueToRValue&gt;</span><br><span class="line">        &#96;-DeclRefExpr 0x5aead28 &lt;col:10&gt; &#39;int&#39; lvalue Var 0x5aeac10 &#39;result&#39; &#39;int&#39;</span><br></pre></td></tr></table></figure>
-
-<p>可以看出：</p>
-<ul>
-<li>一个翻译单元 (Translation Unit) 的顶层节点是 <code>TranslationUnitDecl</code> 。</li>
-<li>在这个例子中，第一个来自用户代码的节点是 <code>FunctionDecl</code> 。</li>
-<li><code>f</code> 的函数体是一个复合语句 <code>CompoundStmt</code>，其子节点是变量 <code>result</code> 的声明，以及返回语句 <code>ReturnStmt</code> 。</li>
-</ul>
-<h2 id="Clang-AST- 的类型"><a href="#Clang-AST- 的类型" class="headerlink" title="Clang AST 的类型"></a>Clang AST 的类型 </h2><h3 id="核心基本类型"><a href="# 核心基本类型" class="headerlink" title="核心基本类型"></a> 核心基本类型</h3><ul>
-<li><code>Decl</code> (声明)<ul>
-<li><code>CXXRecordDecl</code></li>
-<li><code>VarDecl</code></li>
-<li><code>UnresolvedUsingTypenameDecl</code></li>
-</ul>
-</li>
-<li><code>Stmt</code> (语句)<ul>
-<li><code>CompoundStmt</code></li>
-<li><code>CXXTryStmt</code></li>
-<li><code>BinaryOperator</code></li>
-</ul>
-</li>
-<li><code>Type</code> (类型)<ul>
-<li><code>PointerType</code></li>
-<li><code>ParenType</code></li>
-<li><code>SubstTemplateTypeParmType</code></li>
-</ul>
-</li>
-</ul>
-<h3 id="ASTContext"><a href="#ASTContext" class="headerlink" title="ASTContext"></a><code>ASTContext</code></h3><p>在一个翻译单元中，所有有关 AST 的信息都在类 <code>ASTContext</code> ，包括：</p>
-<ul>
-<li>标识符表</li>
-<li><code>SourceManager</code></li>
-<li>AST 的入口节点: <code>TranslationUnitDecl* getTranslationUnitDecl()</code></li>
-</ul>
-<h3 id="胶水类型 -Glue-Classes"><a href="# 胶水类型 -Glue-Classes" class="headerlink" title="胶水类型 (Glue Classes)"></a>胶水类型 (Glue Classes)</h3><ul>
-<li><p><code>DeclContext</code></p>
-<p>包含其他 <code>Decl</code> 的 <code>Decl</code> 需要继承此类。</p>
-</li>
-<li><p><code>TemplateArgument</code></p>
-<p>模板参数的访问器。</p>
-</li>
-<li><p><code>NestedNameSpecifier</code></p>
-</li>
-<li><p><code>QualType</code></p>
-<p>Qual 是 qualifier 的意思，将 C++ 类型中的 <code>const</code> 等拆分出来，避免类型的组合爆炸问题。</p>
-</li>
-</ul>
-<h2 id="访问 -AST- 的方法"><a href="# 访问 -AST- 的方法" class="headerlink" title="访问 AST 的方法"></a>访问 AST 的方法 </h2><h3 id="RecursiveASTVisitor"><a href="#RecursiveASTVisitor" class="headerlink" title="RecursiveASTVisitor"></a><code>RecursiveASTVisitor</code></h3><p> 建议结合 <a href="https://releases.llvm.org/7.0.0/tools/clang/docs/RAVFrontendAction.html" target="_blank" rel="noopener">How to write RecursiveASTVisitor based ASTFrontendActions.</a> 中的代码样例理解，并尝试使用 cmake 编译其中的代码样例。</p>
-<p>特性：</p>
-<ul>
-<li>由用户所关心的类型触发(例如可以访问所有<code>Stmt</code>)</li>
-<li>无法给出上下文信息</li>
-<li>类似 CSS 的类选择器</li>
-</ul>
-<p>关键成员函数：</p>
-<ul>
-<li><code>TraverseDecl(Decl *x)</code> 用于遍历以 <code>x</code> 为根的 AST。它将自动调用 <code>TraverseFoo(Foo *x)</code> ，进而调用 <code>WalkUpFromFoo(x)</code> ，然后递归地以前序或后序的方式深度优先遍历 <code>x</code> 的子节点。 <code>TraverseStmt(Stmt *x)</code> 和 <code>TraverseType(QualType x)</code> 函数的功能类似。</li>
-<li><code>WalkUpFromFoo(Foo *x)</code> 并不尝试访问 <code>x</code> 的子节点，而是向上搜索节点 <code>x</code> 的类型层级，直到达到 AST 的核心基本类型之一 (<code>Stmt</code>/<code>Decl</code>/<code>Type</code>) 。它首先调用 <code>WalkUpFromBar(x)</code> (<code>Bar</code> 是 <code>Foo</code> 的直接父类 (如果存在))，然后调用 <code>VisitFoo(x)</code>。</li>
-<li><code>VisitFoo(Foo *x)</code> 接受类型为 <code>Foo</code> 的节点 <code>x</code> ，并调用可被用户覆盖的函数来访问该节点 (对访问到的具体某类节点的操作逻辑应当写在这个函数里)。</li>
-</ul>
-<p>注意事项：</p>
-<ul>
-<li>在上述三个成员函数中，返回 <code>true</code> 则遍历继续，但若任一函数返回 <code>false</code> ，则整个遍历终止。</li>
-<li>上述三个成员函数具有层级关系 (<code>Traverse*</code> &gt; <code>WalkUpFrom*</code> &gt; <code>Visit*</code>) ，可以调用同级函数或低级函数，但不能调用高级函数。</li>
-<li>由于 <code>WalkUpFromFoo()</code> 首先调用 <code>WalkUpFromBar(x)</code> ，因此在类型层面上 <code>Visit*()</code> 具有自顶向下的调用顺序 (例：对于 <code>NamespaceDecl</code> 类型的节点，调用顺序是 <code>VisitDecl()</code> -&gt; <code>VisitNamedDecl()</code> -&gt; <code>VisitNamespaceDecl()</code>) 。</li>
-<li>遍历 AST 时，默认只访问未实例化的 (而不访问任何隐式或显式实例化的) 模板类和模板函数。可以覆盖 <code>shouldVisitTemplateInstantiations()</code> 函数，使它的返回值为 <code>true</code> 来启用对所有已知的隐式、显式实例化的模板类和模板函数的访问。</li>
-<li>默认采用先序遍历 AST。可以覆盖 <code>shouldTraversePostOrder()</code> 函数，使它的返回值为 <code>true</code> 来使用后序遍历。</li>
-</ul>
-<h3 id="ASTMatcher"><a href="#ASTMatcher" class="headerlink" title="ASTMatcher"></a><code>ASTMatcher</code></h3><ul>
-<li>由表达式 (expressions) 触发 (用户使用表达式规定出发的条件)</li>
-<li>与上下文信息绑定 (用户可以在表达式中利用上下文信息)</li>
-</ul>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/11/27/clang-notes/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
     </div>
@@ -853,7 +801,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">1</span>
+                      
+                    
+                    <span class="site-state-item-count">2</span>
                     <span class="site-state-item-name">categories</span>
                   </a>
                 </div>
@@ -874,7 +824,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
