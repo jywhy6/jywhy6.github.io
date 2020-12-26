@@ -116,7 +116,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://jywhy6.github.io/files/clang-notes/llvm.png">
 <meta property="article:published_time" content="2020-11-27T14:10:52.000Z">
-<meta property="article:modified_time" content="2020-12-12T14:02:13.215Z">
+<meta property="article:modified_time" content="2020-12-26T01:55:32.752Z">
 <meta property="article:author" content="jywhy6">
 <meta property="article:tag" content="程序分析">
 <meta property="article:tag" content="编译器">
@@ -416,7 +416,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2020-12-12 22:02:13" itemprop="dateModified" datetime="2020-12-12T22:02:13+08:00">2020-12-12</time>
+                <time title="Modified: 2020-12-26 09:55:32" itemprop="dateModified" datetime="2020-12-26T09:55:32+08:00">2020-12-26</time>
               
             
           </span>
@@ -476,7 +476,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">22 mins.</span>
+                <span title="Reading time">23 mins.</span>
               
             </div>
           
@@ -533,6 +533,7 @@
 <li>在这个例子中，第一个来自用户代码的节点是 <code>FunctionDecl</code> 。</li>
 <li><code>f</code> 的函数体是一个复合语句 <code>CompoundStmt</code>，其子节点是变量 <code>result</code> 的声明，以及返回语句 <code>ReturnStmt</code> 。</li>
 </ul>
+<h3 id="通过课程 -Slides- 学习 -Clang-AST"><a href="# 通过课程 -Slides- 学习 -Clang-AST" class="headerlink" title="通过课程 Slides 学习 Clang AST"></a>通过课程 Slides 学习 Clang AST</h3><p>这份 <a href="http://swtv.kaist.ac.kr/courses/cs492-fall18/part1-coverage/lec7-Clang-tutorial.pdf" target="_blank" rel="noopener">Clang Tutorial Slides</a> 来自 KAIST (韩国科学技术院) 的 Moonzoo Kim 教授的课程 <a href="http://swtv.kaist.ac.kr/courses/cs492-fall18" target="_blank" rel="noopener">CS492A Automated Software Analysis, Fall 18</a>，内含详细的解释和丰富的图例，<strong>非常推荐阅读</strong>。</p>
 <h2 id="Clang-AST- 的类型"><a href="#Clang-AST- 的类型" class="headerlink" title="Clang AST 的类型"></a>Clang AST 的类型</h2><p>Clang AST 中大部分类型都可以根据其名称得知其含义。也可以在搜索引擎中搜索 “clang functiondecl” 等，以找到对应类型的详细文档。</p>
 <h3 id="核心基本类型"><a href="# 核心基本类型" class="headerlink" title="核心基本类型"></a>核心基本类型 </h3><p> 下面是 Clang AST 的三大核心基本类型，以及它们的子类的例子：</p>
 <ul>
@@ -871,7 +872,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#课程 -Slides"><span class="nav-number">1.1.</span> <span class="nav-text"> 课程 Slides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-AST- 相关"><span class="nav-number">1.2.</span> <span class="nav-text">Clang AST 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor- 相关"><span class="nav-number">1.3.</span> <span class="nav-text">RecursiveASTVisitor 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher- 相关"><span class="nav-number">1.4.</span> <span class="nav-text">ASTMatcher 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入门 -Clang-AST"><span class="nav-number">2.</span> <span class="nav-text">入门 Clang AST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过简单案例学习 -Clang-AST"><span class="nav-number">2.1.</span> <span class="nav-text">通过简单案例学习 Clang AST</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-AST- 的类型"><span class="nav-number">3.</span> <span class="nav-text">Clang AST 的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">核心基本类型 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTContext"><span class="nav-number">3.2.</span> <span class="nav-text">ASTContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#胶水类型 -Glue-Classes"><span class="nav-number">3.3.</span> <span class="nav-text">胶水类型 (Glue Classes)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问 -AST- 的方法"><span class="nav-number">4.</span> <span class="nav-text">访问 AST 的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor"><span class="nav-number">4.1.</span> <span class="nav-text">RecursiveASTVisitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher"><span class="nav-number">4.2.</span> <span class="nav-text">ASTMatcher</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#课程 -Slides"><span class="nav-number">1.1.</span> <span class="nav-text"> 课程 Slides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-AST- 相关"><span class="nav-number">1.2.</span> <span class="nav-text">Clang AST 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor- 相关"><span class="nav-number">1.3.</span> <span class="nav-text">RecursiveASTVisitor 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher- 相关"><span class="nav-number">1.4.</span> <span class="nav-text">ASTMatcher 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入门 -Clang-AST"><span class="nav-number">2.</span> <span class="nav-text">入门 Clang AST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过简单案例学习 -Clang-AST"><span class="nav-number">2.1.</span> <span class="nav-text">通过简单案例学习 Clang AST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过课程 -Slides- 学习 -Clang-AST"><span class="nav-number">2.2.</span> <span class="nav-text">通过课程 Slides 学习 Clang AST</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-AST- 的类型"><span class="nav-number">3.</span> <span class="nav-text">Clang AST 的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">核心基本类型 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTContext"><span class="nav-number">3.2.</span> <span class="nav-text">ASTContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#胶水类型 -Glue-Classes"><span class="nav-number">3.3.</span> <span class="nav-text">胶水类型 (Glue Classes)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问 -AST- 的方法"><span class="nav-number">4.</span> <span class="nav-text">访问 AST 的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor"><span class="nav-number">4.1.</span> <span class="nav-text">RecursiveASTVisitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher"><span class="nav-number">4.2.</span> <span class="nav-text">ASTMatcher</span></a></li></ol></li></ol></div>
             
 
           </div>
