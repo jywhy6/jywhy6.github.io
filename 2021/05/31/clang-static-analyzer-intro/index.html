@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Clang Static Analyer是一个开源的源代码分析工具，它以一些程序分析研究论文为基础，设计了名字-内存区域-值的三元内存模型、基于函数内联的过程间分析方法，综合了抽象语法树分析、控制流图分析、符号执行等漏洞扫描技术，可以高效地发现C、C++和Objective-C程序中的复杂漏洞，并提供可视化的触发漏洞的具体程序执行路径。 目前Clang Static Analyer可以作为命令行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clang Static Analyzer 介绍">
+<meta property="og:url" content="https://jywhy6.github.io/2021/05/31/clang-static-analyzer-intro/index.html">
+<meta property="og:site_name" content="jywhy6&#39;s blog">
+<meta property="og:description" content="Clang Static Analyer是一个开源的源代码分析工具，它以一些程序分析研究论文为基础，设计了名字-内存区域-值的三元内存模型、基于函数内联的过程间分析方法，综合了抽象语法树分析、控制流图分析、符号执行等漏洞扫描技术，可以高效地发现C、C++和Objective-C程序中的复杂漏洞，并提供可视化的触发漏洞的具体程序执行路径。 目前Clang Static Analyer可以作为命令行">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/LLVM_Logo.svg">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/csa_data_structure.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/csa_ast.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/foo_ast.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/csa_cfg.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/csa_exploded_graph.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/csa_symbolic_example.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/worklist_algorithm.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/example_result.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/example_cfg.png">
+<meta property="og:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/example_egraph.svg">
+<meta property="article:published_time" content="2021-05-31T15:53:26.000Z">
+<meta property="article:modified_time" content="2022-01-09T06:37:01.108Z">
+<meta property="article:author" content="jywhy6">
+<meta property="article:tag" content="程序分析">
+<meta property="article:tag" content="编译器">
+<meta property="article:tag" content="软件工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jywhy6.github.io/files/clang-static-analyzer-intro/LLVM_Logo.svg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="https://jywhy6.github.io/2021/05/31/clang-static-analyzer-intro/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Clang Static Analyzer 介绍 | jywhy6's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jywhy6's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-todos">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/todos/" rel="section"><i class="menu-item-icon fa fa-fw fa-check-square-o"></i> <br/>Todos</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://jywhy6.github.io/2021/05/31/clang-static-analyzer-intro/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jywhy6"/>
+      <meta itemprop="description" content=""/>
+      <meta itemprop="image" content="/images/avatar.gif"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jywhy6's blog"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Clang Static Analyzer 介绍
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2021-05-31 23:53:26" itemprop="dateCreated datePublished" datetime="2021-05-31T23:53:26+08:00">2021-05-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2022-01-09 14:37:01" itemprop="dateModified" datetime="2022-01-09T14:37:01+08:00">2022-01-09</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">程序分析</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/files/clang-static-analyzer-intro/LLVM_Logo.svg" alt=" "></p>
+<p>Clang Static Analyer 是一个开源的源代码分析工具，它以一些程序分析研究论文为基础，设计了名字 - 内存区域 - 值的三元内存模型、基于函数内联的过程间分析方法，综合了抽象语法树分析、控制流图分析、符号执行等漏洞扫描技术，可以高效地发现 C、C++ 和 Objective-C 程序中的复杂漏洞，并提供可视化的触发漏洞的具体程序执行路径。</p>
+<p>目前 Clang Static Analyer 可以作为命令行工具使用，也可以被集成在 Xcode 等集成开发环境中使用；在编译构建代码库时，可以调用 Clang Static Analyer 命令行工具对源代码进行漏洞检测；像 Clang 项目的其他部分一样，Clang Static Analyer 被实现成一个 C++ 的库的形式，使得它能被其他的工具和应用使用。</p>
+<a id="more"></a>
+
+<h2 id="参考资料"><a href="# 参考资料" class="headerlink" title="参考资料"></a>参考资料 </h2><h3 id="学术论文"><a href="# 学术论文" class="headerlink" title="学术论文"></a> 学术论文</h3><ul>
+<li><a href="https://dl.acm.org/doi/10.1145/199448.199462" target="_blank" rel="noopener">Precise interprocedural dataflow analysis via graph reachability</a></li>
+<li><a href="https://dl.acm.org/doi/10.5555/1939281.1939332" target="_blank" rel="noopener">A memory model for static analysis of C programs</a></li>
+<li>我的毕业设计论文😉</li>
+</ul>
+<h3 id="会议视频"><a href="# 会议视频" class="headerlink" title="会议视频"></a>会议视频</h3><ul>
+<li><a href="https://www.youtube.com/watch?v=g0Mqx1niUi0" target="_blank" rel="noopener">Developing the Clang Static Analyzer</a></li>
+<li><a href="https://www.youtube.com/watch?v=4n3l-ZcDJNY" target="_blank" rel="noopener">Faster, Stronger C++ Analysis with the Clang Static Analyzer</a></li>
+</ul>
+<h3 id="官方文档"><a href="# 官方文档" class="headerlink" title="官方文档"></a>官方文档</h3><ul>
+<li><a href="https://clang-analyzer.llvm.org/" target="_blank" rel="noopener">Clang Static Analyzer</a></li>
+<li><a href="https://clang.llvm.org/docs/analyzer/developer-docs/IPA.html" target="_blank" rel="noopener">Clang Static Analyzer: Inlining</a></li>
+<li><a href="https://clang.llvm.org/docs/analyzer/checkers.html" target="_blank" rel="noopener">Clang Static Analyzer: Available Checkers</a></li>
+</ul>
+<h3 id="其他文档"><a href="# 其他文档" class="headerlink" title="其他文档"></a>其他文档</h3><ul>
+<li><a href="https://github.com/haoNoQ/clang-analyzer-guide/releases" target="_blank" rel="noopener">Clang Static Analyzer - A Checker Developer’s Guide</a></li>
+<li><a href="https://blog.csdn.net/dashuniuniu/article/details/52830592" target="_blank" rel="noopener">clang static analyzer 源码分析（番外篇）：evalCall()中的 inline 机制</a></li>
+</ul>
+<h2 id="Clang-Static-Analyzer 的数据结构"><a href="#Clang-Static-Analyzer 的数据结构" class="headerlink" title="Clang Static Analyzer 的数据结构"></a>Clang Static Analyzer 的数据结构</h2><p>Clang Static Analyzer 以源代码为起点，将源代码转换为 Clang AST (Clang 的抽象语法树结构) ，然后生成 Clang CFG (Clang 的控制流图结构) ；随着程序的模拟执行，Clang 的符号执行引擎会生成 Exploded Graph (扩展图) ，详细记录程序的执行位置和程序当前状态信息；最后，在各个 Checker (Clang Static Analyzer 中可自定义的漏洞检查器) 回调函数检测到漏洞产生时，将基于 Exploded Graph 中的数据生成带漏洞触发路径的漏洞报告。Clang Static Analyzer 各个数据结构之间的关系如下图所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/csa_data_structure.png" alt=" "></p>
+<h3 id="Clang-AST"><a href="#Clang-AST" class="headerlink" title="Clang AST"></a>Clang AST</h3><p>Clang AST 是 Clang 使用的抽象语法树结构。Clang AST 的节点对应源代码中的语句 (statement) 、声明 (declaration) 、类型等，并且包含了源代码行数列数等详细信息；Clang AST 的边表示一种包含关系，即子节点在程序语法结构上是父节点的一部分。Clang AST 的示意图和实例如下所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/csa_ast.png" alt=" "></p>
+<p><img src="/files/clang-static-analyzer-intro/foo_ast.png" alt=" "></p>
+<h3 id="Clang-CFG"><a href="#Clang-CFG" class="headerlink" title="Clang CFG"></a>Clang CFG</h3><p>Clang CFG 是 Clang 使用的控制流图结构。Clang CFG 的节点代表一个基本块，基本块内的有序排列的基本元素对应 Clang AST 中的语句；Clang CFG 的边则是对程序执行位置先后顺序的表示。值得注意的是，Clang Static Analyzer 为了尽可能地保留源代码中的语法解构和语义信息，Clang CFG 的基本元素并不是被用于编译的、剔除了大量语法语义信息的 LLVM IR (LLVM 编译器后端的三地址码的中间表示形式) 。Clang CFG 的示意图如下所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/csa_cfg.png" alt=" "></p>
+<h3 id="Exploded-Graph"><a href="#Exploded-Graph" class="headerlink" title="Exploded Graph"></a>Exploded Graph</h3><p>Exploded Graph 是 Clang Static Analyzer 在模拟执行程序时使用的记录符号执行过程的图状数据结构。Exploded Graph 中的节点可以由程序点和程序状态组成的二元组表示，其中程序点可以是 Clang CFG 中任意两个相邻语句之间的程序执行位置，程序状态记录了符号执行到当前程序点为止经过的所有语句所造成的影响 (内存区域变化、符号执行环境变化、Checker 注册的状态等) ；Exploded Graph 中的边表示在两个程序点之间的语句执行并对程序状态造成影响。Clang Static Analyzer 的 Exploded Graph 示意图如下所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/csa_exploded_graph.png" alt=" "></p>
+<h2 id="Clang-Static-Analyzer 的符号执行"><a href="#Clang-Static-Analyzer 的符号执行" class="headerlink" title="Clang Static Analyzer 的符号执行"></a>Clang Static Analyzer 的符号执行</h2><p>Clang Static Analyzer 中的符号执行流程如下图所示：首先使用编译器前端，将源代码转换为基于 Clang AST 语句节点的 Clang CFG 中间表示；然后运行符号执行引擎，基于 Clang CFG 模拟执行程序，生成 Exploded Graph，并在触发漏洞条件时产生漏洞报告。</p>
+<p><img src="/files/clang-static-analyzer-intro/csa_symbolic_example.png" alt=" "></p>
+<h3 id="工作列表算法"><a href="# 工作列表算法" class="headerlink" title="工作列表算法"></a>工作列表算法</h3><p>Clang Static Analyzer 的符号执行使用工作列表 (worklist) 算法，访问 Clang CFG 的各个基本块，根据基本块内语句性质更新程序状态，如下图所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/worklist_algorithm.png" alt=" "></p>
+<p>工作列表算法伪代码中的各个变量与函数的含义如下：</p>
+<ul>
+<li><code>start</code>是起始基本块。一般使用 Clang CFG 中无入边的基本块集合作为起始基本块。</li>
+<li><code>worklist</code>是可以增删单个元素的数据结构的实例对象。使用 <code>push</code> 成员函数新增单个元素，使用 <code>pop</code> 成员函数取出单个元素。</li>
+<li><code>execute</code>函数接受一个基本块作为参数，传递给符号执行引擎以模拟执行该基本块、产生新的 Exploded Node 节点，并根据程序状态返回接下来可能到达的基本块。</li>
+</ul>
+<p>不难看出：当 <code>worklist</code> 是栈时，该算法本质上是对 Clang CFG 的深度优先搜索；当 <code>worklist</code> 是队列时，该算法本质上是对 Clang CFG 的广度优先搜索；<code>worklist</code>还可以是优先级队列，可以设置队列元素的优先级，此时该算法本质上是对 Clang CFG 的启发式搜索。</p>
+<p>Clang Static Analyzer 符号执行引擎会记录 Clang CFG 中各个基本块的模拟执行次数，并给模拟执行次数较少的基本块更高的优先级，以扩大符号执行覆盖率、找到更短的漏洞触发路径。</p>
+<p>工作列表算法伪代码中的 <code>execute</code> 函数代表了 Clang Static Analyzer 符号执行引擎模拟程序执行的具体方式。符号执行引擎读入基本块，按顺序执行基本块内的各个语句，更新程序状态，生成 Exploded Graph 节点。</p>
+<p>Clang Static Analyzer 符号执行引擎会根据语句的类别和作用，更新对应的程序状态。由符号执行引擎管理的程序状态包括 Store (存储) 、Expressions (表达式) 、Ranges (取值范围) 三类，其中：</p>
+<ul>
+<li>Store 存储变量名或内存区域到值的映射，对变量进行赋值的语句会改变程序状态的 Store</li>
+<li>Expressions 存储活跃表达式到值的映射，语句中的表达式求值部分会改变程序状态的 Expressions</li>
+<li>Ranges 存储符号到取值范围的映射，与符号相关的分支语句会改变程序状态的 Ranges</li>
+</ul>
+<p>符号执行引擎会定期执行活跃性分析，清除 Store、Expressions、Ranges 中不会被使用的项目。</p>
+<h3 id="过程间分析"><a href="# 过程间分析" class="headerlink" title="过程间分析"></a>过程间分析</h3><p>Clang Static Analyzer 符号执行引擎支持过程间分析 (interprocedural analysis) 。过程内分析 (intraprocedural analysis) 仅在函数层级进行分析，无法正确模拟函数调用的行为；过程间分析在整个程序层级进行分析，能较好地模拟函数调用行为，分析精度较高。</p>
+<p>Clang Static Analyzer 符号执行引擎在读取程序源代码后，首先根据函数间的调用者与被调用者关系，构造函数调用图 (Call Graph) ，然后基于拓扑顺序对函数调用图中的各个函数逐个进行分析。在遭遇函数调用时，符号执行引擎会试图将被调用函数内联到当前的 Clang CFG 中。</p>
+<p>但是，基于内联的过程间分析存在函数调用路径指数级增长、函数递归调用次数未知等问题。因此，Clang Static Analyzer 符号执行引擎提供了一系列规则，对内联进行一定程度的限制，若出现下列情形，会导致函数无法被内联：</p>
+<ul>
+<li>被调用函数的函数体无法被找到</li>
+<li>当前函数内联调用栈过深</li>
+<li>被调用函数的 Clang CFG 过于复杂 (基本块过多)</li>
+</ul>
+<p>当被调用函数无法被内联时，Clang Static Analyzer 符号执行引擎认为被调用函数的行为是未知的，对函数调用语句进行保守估计，例如：被调用函数的返回值未知，因此生成 (conjure) 符号代表函数的返回值；被调用函数可能修改全局变量，因此使用新的符号代表非常量的全局变量；按引用或指针传递的参数对应的内存区域可能被修改，生成符号替换 Store 中原内存区域绑定的值。</p>
+<h2 id="Clang-Static-Analyzer 的应用"><a href="#Clang-Static-Analyzer 的应用" class="headerlink" title="Clang Static Analyzer 的应用"></a>Clang Static Analyzer 的应用 </h2><h3 id="直接使用 Clang-Static-Analyzer"><a href="# 直接使用 Clang-Static-Analyzer" class="headerlink" title="直接使用 Clang Static Analyzer"></a> 直接使用 Clang Static Analyzer</h3><p>Clang Static Analyzer 提供了丰富的命令行参数选项，能输出触发漏洞的详细路径，以及符号执行使用的 Clang CFG 和 Exploded Graph。本小节将以 Clang Static Analyzer 中的符号执行流程图左侧的代码片段为素材 (存储为<code>example.c</code>) ，介绍 Clang Static Analyzer 的使用方法。</p>
+<p>使用 <code>clang -cc1 -analyze -analyzer-checker core -analyzer-output html example.c</code> 命令，即可使用核心漏洞检查器对 <code>example.c</code> 进行漏洞扫描，并生成 <code>.html</code> 格式的漏洞报告文档，其中详细展示了漏洞触发的原因，如下图所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/example_result.png" alt=" "></p>
+<p>使用 <code>clang -cc1 -analyze -analyzer-checker=debug.ViewCFG example.c</code> 命令即可生成 <code>.dot</code> 格式的 Clang CFG，如下图所示。</p>
+<p><img src="/files/clang-static-analyzer-intro/example_cfg.png" alt=" "></p>
+<p>使用 <code>clang -cc1 -analyze -analyzer-checker core -analyzer-dump-egraph=example_egraph.dot example.c</code> 命令即可生成 <code>.dot</code> 格式的 Exploded Graph，再使用 Clang 源码树下的 <code>utils/analyzer/exploded-graph-rewriter.py</code> 脚本可以生成可视化的 <code>.html</code> 文件，如下图所示 (其中右侧分支触发了漏洞)。</p>
+<p><img src="/files/clang-static-analyzer-intro/example_egraph.svg" alt=" "></p>
+<h3 id="Clang-Static-Analyzer 的 Checker"><a href="#Clang-Static-Analyzer 的 Checker" class="headerlink" title="Clang Static Analyzer 的 Checker"></a>Clang Static Analyzer 的 Checker</h3><p>在 Clang Static Analyzer 中，Checker (漏洞检查器) 是根据可自定义的规则，通过在符号执行引擎注册回调函数，在符号执行过程中不断检查漏洞是否触发，并生成漏洞报告的模块。</p>
+<p>可以使用 <code>clang -cc1 -analyzer-checker-help</code> 命令在终端打印 Clang Static Analyzer 的所有内置 Checker，也可以查看官方文档以阅读详细的 Checker 说明和代码样例。本节将介绍 Clang Static Analyzer 中较为重要的 <code>core</code> 系列、<code>unix</code>系列、<code>security</code>系列 Checker。</p>
+<p><code>core</code>系列 Checker 对语言核心功能进行建模，包含了许多泛用型的漏洞检查器，能检查除零错误、空指针解引用、未初始化值的使用等典型漏洞，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>core.CallAndMessage</td>
+<td>检查函数调用中的空函数指针等逻辑漏洞</td>
+</tr>
+<tr>
+<td>core.DivideZero</td>
+<td>检查除零错误</td>
+</tr>
+<tr>
+<td>core.NonNullParamChecker</td>
+<td>检查参数为引用或 <code>nonnull</code> 的函数被传入空指针</td>
+</tr>
+<tr>
+<td>core.NullDereference</td>
+<td>检查空指针解引用</td>
+</tr>
+<tr>
+<td>core.StackAddressEscape</td>
+<td>检查栈空间逃逸</td>
+</tr>
+<tr>
+<td>core.UndefinedBinaryOperatorResult</td>
+<td>检查二元运算符的未定义行为</td>
+</tr>
+<tr>
+<td>core.VLASize</td>
+<td>检查可变长度数组的声明是否合法</td>
+</tr>
+<tr>
+<td>core.uninitialized.ArraySubscript</td>
+<td>检查是否使用未初始化变量作为数组下标</td>
+</tr>
+<tr>
+<td>core.uninitialized.Assign</td>
+<td>检查是否使用未初始化变量进行赋值</td>
+</tr>
+<tr>
+<td>core.uninitialized.Branch</td>
+<td>检查是否使用未初始化变量作为分支条件</td>
+</tr>
+<tr>
+<td>core.uninitialized.CapturedBlockVariable</td>
+<td>检查未初始化变量是否被 <code>block</code> 捕获</td>
+</tr>
+<tr>
+<td>core.uninitialized.UndefReturn</td>
+<td>检查是否使用未初始化变量作为返回值</td>
+</tr>
+</tbody></table>
+<p><code>unix</code>系列 Checker 对 POSIX/Unix 系列函数使用的正确性进行检查，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>unix.API</td>
+<td>检查 <code>open</code>、<code>malloc</code> 等 POSIX/Unix 函数的参数是否合法</td>
+</tr>
+<tr>
+<td>unix.Malloc</td>
+<td>检查内存泄漏、二重释放、释放后使用等漏洞</td>
+</tr>
+<tr>
+<td>unix.MallocSizeof</td>
+<td>检查 <code>sizeof</code> 作为 <code>malloc</code> 参数时类型是否匹配</td>
+</tr>
+<tr>
+<td>unix.MismatchedDeallocator</td>
+<td>检查是否混用 C/C++ 的动态内存分配释放语法</td>
+</tr>
+<tr>
+<td>unix.Vfork</td>
+<td>检查 <code>vfork</code> 函数的使用是否正确</td>
+</tr>
+<tr>
+<td>unix.cstring.BadSizeArg</td>
+<td>检查字符串处理函数的长度参数是否合法</td>
+</tr>
+<tr>
+<td>unix.cstrisng.NullArg</td>
+<td>检查字符串处理函数的缓冲区参数是否为空指针</td>
+</tr>
+</tbody></table>
+<p><code>security</code>系列 Checker 对安全标准中禁止使用的危险函数和操作等进行检查，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>security.FloatLoopCounter</td>
+<td>检查浮点数作为循环计数器</td>
+</tr>
+<tr>
+<td>security.insecureAPI.UncheckedReturn</td>
+<td>检查敏感函数的返回值是否被处理</td>
+</tr>
+<tr>
+<td>security.insecureAPI.bcmp</td>
+<td>检查 <code>bcmp</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.bcopy</td>
+<td>检查 <code>bcopy</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.bzero</td>
+<td>检查 <code>bzero</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.getpw</td>
+<td>检查 <code>getpw</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.gets</td>
+<td>检查 <code>gets</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.mkstemp</td>
+<td>检查是否正确使用 <code>mkstemp</code> 函数</td>
+</tr>
+<tr>
+<td>security.insecureAPI.mktemp</td>
+<td>检查 <code>mktemp</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.rand</td>
+<td>检查较差的随机数生成函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.strcpy</td>
+<td>检查 <code>strcpy</code>、<code>strcat</code> 的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.vfork</td>
+<td>检查 <code>vfork</code> 函数的使用</td>
+</tr>
+<tr>
+<td>security.insecureAPI.DeprecatedOrUnsafeBufferHandling</td>
+<td>检查 <code>memcpy</code> 等危险的缓冲区函数</td>
+</tr>
+</tbody></table>
+<h3 id="Checker 的编写方法"><a href="#Checker 的编写方法" class="headerlink" title="Checker 的编写方法"></a>Checker 的编写方法 </h3><p> 本节参考 NoQ 撰写的 <a href="https://github.com/haoNoQ/clang-analyzer-guide/releases" target="_blank" rel="noopener">Checker 编写教程</a>，基于一个简单的 Checker 编写案例，介绍 Checker 的编写方法。本节的 Checker 代码使用 Clang 10 的 Checker 开发接口。</p>
+<p>该 Checker 将检查源代码中违反 C/C++ 标准的情形：程序内不应存在对 <code>main</code> 函数的调用。<code>main</code>函数不应是直接或间接递归的，否则会产生未定义行为。直觉上看，似乎简单的基于正则表达式的字符串匹配就能完成检查这一漏洞的工作，但 C/C++ 语言中函数指针实际上为函数提供了别名，可以存在函数名称不同但实际调用了 <code>main</code> 函数的情形，如代码片段 <code>main_call.cpp</code> 所示。因此，我们仍需要使用符号执行技术对 <code>main</code> 函数调用漏洞进行检查。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main_call.cpp</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">main_t</span> = <span class="keyword">int</span> (*)(<span class="keyword">int</span> , <span class="keyword">char</span> **);</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">(<span class="keyword">int</span> argc , <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">main_t</span> foo = main;</span><br><span class="line">    <span class="keyword">int</span> exit_code = foo(argc, argv); <span class="comment">// actually calls main ()!</span></span><br><span class="line">    <span class="keyword">return</span> exit_code;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写 Checker 的第一步是包含 (include) Clang Static Analyzer 提供的 Checker 模块头文件，如代码片段 <code>MainCallChecker.cpp (Part 1)</code> 所示。其中 <code>BugType.h</code> 提供了与漏洞报告相关的类的声明，<code>Checker.h</code>提供了 <code>Checker</code> 类的定义和各类漏洞检查接口的声明，<code>BugType.h</code>提供了路径敏感的 Checker 所需的上下文信息类的声明，<code>CheckerRegistry.h</code>提供了将 Checker 编译成 Clang Plugin (Clang 编译器插件) 的接口声明。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MainCallChecker.cpp (Part 1)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"clang/StaticAnalyzer/Core/BugReporter/BugType.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"clang/StaticAnalyzer/Core/Checker.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"clang/StaticAnalyzer/Core/PathSensitive/CheckerContext.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"clang/StaticAnalyzer/Frontend/CheckerRegistry.h"</span></span></span><br></pre></td></tr></table></figure>
+
+<p>编写 Checker 的第二步是确定 Checker 要对程序中的哪些语法元素进行检查，如代码片段 <code>MainCallChecker.cpp (Part 2)</code> 所示。其中声明使用 <code>clang</code> 和<code>clang::ento</code>两个命名空间，以便使用命名空间内声明的各个类和接口；在匿名命名空间内，继承 <code>Checker&lt;check::PreStmt&lt;CallExpr&gt;&gt;</code> 类，声明 <code>MainCallChecker</code> 类及其成员变量和成员函数。从基类类型和回调函数 <code>checkPreStmt</code> 可以看出，该 Checker 是在符号执行引擎模拟执行到函数调用语句前触发回调函数，并检测是否存在所关心的漏洞。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MainCallChecker.cpp (Part 2)</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> clang;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> clang::ento;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> &#123;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainCallChecker</span> :</span> <span class="keyword">public</span> Checker&lt;check::PreStmt&lt;CallExpr&gt;&gt; &#123;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;BugType&gt; BT_maincall;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">checkPreStmt</span><span class="params">(<span class="keyword">const</span> CallExpr *CE, CheckerContext &amp;C)</span> <span class="keyword">const</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">emitError</span><span class="params">(CheckerContext &amp;C, <span class="keyword">const</span> Expr *Callee)</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写 Checker 的第三步是编写回调函数逻辑和错误报告函数逻辑，如代码片段 <code>MainCallChecker.cpp (Part 3)</code> 所示。其中回调函数 <code>checkPreStmt</code> 逻辑较为简单，获取被调用函数对象，从 Checker 上下文中取出函数声明，若函数名标识符为 <code>main</code>，则调用<code>emitError</code> 函数报告错误；<code>emitError</code>函数则在 Exploded Graph 中生成一个表示漏洞触发的新节点，构造 <code>PathSensitiveBugReport</code> (路径敏感的漏洞报告) 对象，并调用 Checker 上下文的<code>emitReport</code> 接口产生漏洞报告。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MainCallChecker.cpp (Part 3)</span></span><br><span class="line"><span class="keyword">void</span> MainCallChecker::checkPreStmt(<span class="keyword">const</span> CallExpr *CE,</span><br><span class="line">                                   CheckerContext &amp;C) <span class="keyword">const</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> Expr *Callee = CE-&gt;getCallee();</span><br><span class="line">  <span class="keyword">const</span> FunctionDecl *FD = C.getSVal(Callee).getAsFunctionDecl();</span><br><span class="line">  <span class="keyword">if</span> (!FD)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  IdentifierInfo *II = FD-&gt;getIdentifier();</span><br><span class="line">  <span class="keyword">if</span> (!II)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">if</span> (II-&gt;isStr(<span class="string">"main"</span>)) &#123;</span><br><span class="line">    emitError(C, Callee);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> MainCallChecker::emitError(CheckerContext &amp;C, <span class="keyword">const</span> Expr *Callee) <span class="keyword">const</span> &#123;</span><br><span class="line">  ExplodedNode *N = C.generateNonFatalErrorNode();</span><br><span class="line">  <span class="keyword">if</span> (!N)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">if</span> (!BT_maincall)</span><br><span class="line">    BT_maincall = <span class="built_in">std</span>::make_unique&lt;BugType&gt;(<span class="keyword">this</span>, <span class="string">"Potential call to main"</span>,</span><br><span class="line">                                            <span class="string">"beta.MainCallChecker"</span>);</span><br><span class="line">  <span class="keyword">auto</span> report = <span class="built_in">std</span>::make_unique&lt;PathSensitiveBugReport&gt;(</span><br><span class="line">      *BT_maincall, BT_maincall-&gt;getDescription(), N);</span><br><span class="line">  report-&gt;addRange(Callee-&gt;getSourceRange());</span><br><span class="line">  C.emitReport(<span class="built_in">std</span>::move(report));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写 Checker 的最后一步是编写回调函数逻辑和错误报告函数逻辑，如代码片段 <code>MainCallChecker.cpp (Part 4)</code> 所示。其中定义了 <code>clang_registerCheckers</code> 接口函数和 <code>clang_analyzerAPIVersionString</code> 常量，在指定的 Clang Static Analyzer 版本中注册名称为 <code>beta.MainCallChecker</code> 的 Checker。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MainCallChecker.cpp (Part 4)</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">void</span> <span class="title">clang_registerCheckers</span><span class="params">(CheckerRegistry &amp;registry)</span> </span>&#123;</span><br><span class="line">  registry.addChecker&lt;MainCallChecker&gt;(</span><br><span class="line">      <span class="string">"beta.MainCallChecker"</span>, <span class="string">"Disallows calls to main function"</span>, <span class="string">""</span>, <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">const</span> <span class="keyword">char</span> clang_analyzerAPIVersionString[] =</span><br><span class="line">    CLANG_ANALYZER_API_VERSION_STRING;</span><br></pre></td></tr></table></figure>
+
+<p>使用 CMake 编译 <code>MainCallChecker.cpp</code> 生成 <code>MainCallChecker.so</code> 后，可以使用 <code>clang -cc1 -load MainCallChecker.so -analyze -analyzer-checker core,beta  main_call.cpp</code> 命令加载并应用该 Checker，对源代码中 <code>main</code> 函数的调用进行检查。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>jywhy6</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    
+    <a href="https://jywhy6.github.io/2021/05/31/clang-static-analyzer-intro/" title="Clang Static Analyzer 介绍">https://jywhy6.github.io/2021/05/31/clang-static-analyzer-intro/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" rel="tag"># 程序分析</a>
+          
+            <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" rel="tag"># 编译器</a>
+          
+            <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" rel="tag"># 软件工程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/11/klee-notes/" rel="next" title="符号执行引擎 KLEE 学习笔记">
+                <i class="fa fa-chevron-left"></i> 符号执行引擎 KLEE 学习笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">jywhy6</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/%20%7C%7C%20th">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/%20%7C%7C%20tags">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#学术论文"><span class="nav-number">1.1.</span> <span class="nav-text"> 学术论文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会议视频"><span class="nav-number">1.2.</span> <span class="nav-text">会议视频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#官方文档"><span class="nav-number">1.3.</span> <span class="nav-text">官方文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他文档"><span class="nav-number">1.4.</span> <span class="nav-text">其他文档</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-Static-Analyzer 的数据结构"><span class="nav-number">2.</span> <span class="nav-text">Clang Static Analyzer 的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-AST"><span class="nav-number">2.1.</span> <span class="nav-text">Clang AST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-CFG"><span class="nav-number">2.2.</span> <span class="nav-text">Clang CFG</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exploded-Graph"><span class="nav-number">2.3.</span> <span class="nav-text">Exploded Graph</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-Static-Analyzer 的符号执行"><span class="nav-number">3.</span> <span class="nav-text">Clang Static Analyzer 的符号执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作列表算法"><span class="nav-number">3.1.</span> <span class="nav-text">工作列表算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过程间分析"><span class="nav-number">3.2.</span> <span class="nav-text">过程间分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-Static-Analyzer 的应用"><span class="nav-number">4.</span> <span class="nav-text">Clang Static Analyzer 的应用 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直接使用 Clang-Static-Analyzer"><span class="nav-number">4.1.</span> <span class="nav-text"> 直接使用 Clang Static Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-Static-Analyzer 的 Checker"><span class="nav-number">4.2.</span> <span class="nav-text">Clang Static Analyzer 的 Checker</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Checker 的编写方法"><span class="nav-number">4.3.</span> <span class="nav-text">Checker 的编写方法 </span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jywhy6</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.1.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css"/>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '3e7b18c2937adbb36554',
+    clientSecret: '59d417e05ca2d04bc67692b9c3509b753bd22d10',
+    repo: 'jywhy6.github.io',
+    owner: 'jywhy6',
+    admin: ['jywhy6'],
+    id: md5(location.pathname),
+    
+      language: 'en',
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
