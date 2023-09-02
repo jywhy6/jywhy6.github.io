@@ -1,142 +1,53 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="en">
+<html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
-<meta name="theme-color" content="#222"/>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
 
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"jywhy6.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
 
-  
-  
-    
-    
-  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
-
-
-
-
-
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
-
-<link rel="stylesheet" href="/css/main.css?v=7.1.0"/>
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
-
-
-
-
-
-
-
-<script id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '7.1.0',
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
-    back2top: true,
-    back2top_sidebar: false,
-    fancybox: true,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  <meta name="description" content="LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C&#x2F;C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Java 字节码">
+  <meta name="description" content="LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C&#x2F;C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Jav">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LLVM 编译器前端 Clang AST &amp; API 学习笔记">
 <meta property="og:url" content="https://jywhy6.github.io/2020/11/27/clang-notes/index.html">
 <meta property="og:site_name" content="jywhy6&#39;s blog">
-<meta property="og:description" content="LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C&#x2F;C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Java 字节码">
+<meta property="og:description" content="LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C&#x2F;C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Jav">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://jywhy6.github.io/files/clang-notes/llvm.png">
 <meta property="article:published_time" content="2020-11-27T14:10:52.000Z">
 <meta property="article:modified_time" content="2022-01-08T15:48:20.408Z">
 <meta property="article:author" content="jywhy6">
 <meta property="article:tag" content="程序分析">
-<meta property="article:tag" content="软件工程">
 <meta property="article:tag" content="编译器">
+<meta property="article:tag" content="软件工程">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://jywhy6.github.io/files/clang-notes/llvm.png">
 
+<link rel="canonical" href="https://jywhy6.github.io/2020/11/27/clang-notes/">
 
 
-
-
-  
-  
-  <link rel="canonical" href="https://jywhy6.github.io/2020/11/27/clang-notes/"/>
-
-
-
-<script id="page.configurations">
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -148,15 +59,8 @@
 
 
 
-
-
-
-
-
-
   <noscript>
   <style>
-  .use-motion .motion-element,
   .use-motion .brand,
   .use-motion .menu-item,
   .sidebar-inner,
@@ -165,9 +69,8 @@
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-title { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
-  .use-motion .logo,
   .use-motion .site-title,
   .use-motion .site-subtitle {
     opacity: initial;
@@ -179,151 +82,60 @@
   </style>
 </noscript>
 
-<meta name="generator" content="Hexo 4.1.1"></head>
+</head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="en">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
     <div class="headband"></div>
 
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">jywhy6's blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
-    
-    
   </div>
 
-  <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">jywhy6's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
   </div>
 </div>
 
 
 
+
 <nav class="site-nav">
-  
-    <ul id="menu" class="menu">
-      
-        
-        
-        
-          
-          <li class="menu-item menu-item-home">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>Home</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-about">
+        <li class="menu-item menu-item-about">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-todos">
+        <li class="menu-item menu-item-archives">
 
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/todos/" rel="section"><i class="menu-item-icon fa fa-fw fa-check-square-o"></i> <br/>Todos</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-tags">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>Tags</a>
-
-  </li>
-        
-        
-        
-          
-          <li class="menu-item menu-item-categories">
-
-    
-    
-    
-      
-    
-
-    
-
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>Categories</a>
-
-  </li>
-
-      
-      
-    </ul>
-  
-
-  
-    
-
-  
-
-  
+  </ul>
 </nav>
 
-
-
-  
 
 
 
@@ -331,133 +143,85 @@
     </header>
 
     
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
 
 
-    <main id="main" class="main">
+    <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
-          <div id="content" class="content">
+
+          <div class="content post posts-expand">
             
 
-  <div id="posts" class="posts-expand">
     
-
-  
-
   
   
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://jywhy6.github.io/2020/11/27/clang-notes/"/>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://jywhy6.github.io/2020/11/27/clang-notes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="jywhy6"/>
-      <meta itemprop="description" content=""/>
-      <meta itemprop="image" content="/images/avatar.gif"/>
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="jywhy6">
+      <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="jywhy6's blog"/>
+      <meta itemprop="name" content="jywhy6's blog">
     </span>
-
-    
       <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">LLVM 编译器前端 Clang AST & API 学习笔记
-
-              
-            
-          </h1>
-        
+        <h1 class="post-title" itemprop="name headline">
+          LLVM 编译器前端 Clang AST & API 学习笔记
+        </h1>
 
         <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
+            <span class="post-meta-item">
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="far fa-calendar"></i>
               </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
+              <span class="post-meta-item-text">Posted on</span>
 
               <time title="Created: 2020-11-27 22:10:52" itemprop="dateCreated datePublished" datetime="2020-11-27T22:10:52+08:00">2020-11-27</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2022-01-08 23:48:20" itemprop="dateModified" datetime="2022-01-08T23:48:20+08:00">2022-01-08</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">程序分析</span></a></span>
-
-                
-                
-              
             </span>
-          
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-01-08 23:48:20" itemprop="dateModified" datetime="2022-01-08T23:48:20+08:00">2022-01-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">程序分析</span></a>
+                </span>
+            </span>
 
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>9 mins.</span>
+            </span>
 
         </div>
       </header>
-    
 
     
     
@@ -465,39 +229,36 @@
     <div class="post-body" itemprop="articleBody">
 
       
-      
-
-      
-        <p><img src="/files/clang-notes/llvm.png" alt=" "></p>
+        <p><img data-src="/files/clang-notes/llvm.png" alt=" "></p>
 <blockquote>
-<p>LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C/C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Java 字节码、Objective-C、Swift、Python、Ruby、Crystal、Rust、Scala 以及 C# 等语言。<br>（摘录自中文维基百科，有改动）</p>
+<p>LLVM 是一套编译器基础设施项目，为自由软件，以 C++ 写成，包含一系列模块化的编译器组件和工具链，用来开发编译器前端和后端。它是为了任意一种编程语言而写成的程序，利用虚拟技术创造出编译时期、链接时期、运行时期以及「闲置时期」的最优化。它最早以 C&#x2F;C++ 为实现对象，而目前它已支持包括 ActionScript、Ada、D 语言、Fortran、GLSL、Haskell、Java 字节码、Objective-C、Swift、Python、Ruby、Crystal、Rust、Scala 以及 C# 等语言。<br>（摘录自中文维基百科，有改动）</p>
 </blockquote>
 <p>这篇博文是我学习 LLVM 编译器架构的编译器前端 Clang 的笔记。</p>
-<p>该笔记的侧重点在 <strong> 如何使用 Clang AST 相关的 API 进行静态源码分析工具的开发</strong>，而非如何使用 Clang 系列二进制工具。</p>
-<a id="more"></a>
+<p>该笔记的侧重点在<strong>如何使用 Clang AST 相关的 API 进行静态源码分析工具的开发</strong>，而非如何使用 Clang 系列二进制工具。</p>
+<span id="more"></span>
 
-<h2 id="参考资料"><a href="# 参考资料" class="headerlink" title="参考资料"></a>参考资料 </h2><h3 id="课程 -Slides"><a href="# 课程 -Slides" class="headerlink" title="课程 Slides"></a> 课程 Slides</h3><ul>
-<li><a href="http://swtv.kaist.ac.kr/courses/cs492-fall18" target="_blank" rel="noopener">CS492A Automated Software Analysis, Fall 18</a></li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><h3 id="课程-Slides"><a href="#课程-Slides" class="headerlink" title="课程 Slides"></a>课程 Slides</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://swtv.kaist.ac.kr/courses/cs492-fall18">CS492A Automated Software Analysis, Fall 18</a></li>
 </ul>
-<h3 id="Clang-AST- 相关"><a href="#Clang-AST- 相关" class="headerlink" title="Clang AST 相关"></a>Clang AST 相关</h3><ul>
-<li><a href="https://freecompilercamp.org/clang-intro/" target="_blank" rel="noopener">Clang - An Introduction</a></li>
-<li><a href="https://blog.csdn.net/hatter110/article/details/107282596" target="_blank" rel="noopener">Clang AST 基础学习</a></li>
-<li><a href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html" target="_blank" rel="noopener">Introduction to the Clang AST</a></li>
-<li><a href="https://www.youtube.com/watch?v=b8JTwPz5dSw" target="_blank" rel="noopener">2013 EuroLLVM Developers’ Meeting: “The Clang AST - a tutorial”</a></li>
+<h3 id="Clang-AST-相关"><a href="#Clang-AST-相关" class="headerlink" title="Clang AST 相关"></a>Clang AST 相关</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://freecompilercamp.org/clang-intro/">Clang - An Introduction</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hatter110/article/details/107282596">Clang AST 基础学习</a></li>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html">Introduction to the Clang AST</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=b8JTwPz5dSw">2013 EuroLLVM Developers’ Meeting: “The Clang AST - a tutorial”</a></li>
 </ul>
-<h3 id="RecursiveASTVisitor- 相关"><a href="#RecursiveASTVisitor- 相关" class="headerlink" title="RecursiveASTVisitor 相关"></a><code>RecursiveASTVisitor</code> 相关</h3><ul>
-<li><a href="https://clang.llvm.org/docs/RAVFrontendAction.html" target="_blank" rel="noopener">How to write RecursiveASTVisitor based ASTFrontendActions.</a></li>
-<li><a href="https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html" target="_blank" rel="noopener">clang::RecursiveASTVisitor&lt; Derived &gt; Class Template Reference</a></li>
+<h3 id="RecursiveASTVisitor-相关"><a href="#RecursiveASTVisitor-相关" class="headerlink" title="RecursiveASTVisitor 相关"></a><code>RecursiveASTVisitor</code> 相关</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/RAVFrontendAction.html">How to write RecursiveASTVisitor based ASTFrontendActions.</a></li>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/doxygen/classclang_1_1RecursiveASTVisitor.html">clang::RecursiveASTVisitor&lt; Derived &gt; Class Template Reference</a></li>
 </ul>
-<h3 id="ASTMatcher- 相关"><a href="#ASTMatcher- 相关" class="headerlink" title="ASTMatcher 相关"></a><code>ASTMatcher</code> 相关</h3><ul>
-<li><a href="https://blog.csdn.net/hatter110/article/details/107282775" target="_blank" rel="noopener">Clang ASTMatcher 基础学习</a></li>
-<li><a href="https://clang.llvm.org/docs/LibASTMatchers.html" target="_blank" rel="noopener">Matching the Clang AST</a></li>
-<li><a href="https://clang.llvm.org/docs/LibASTMatchersTutorial.html" target="_blank" rel="noopener">Tutorial for building tools using LibTooling and LibASTMatchers</a></li>
-<li><a href="https://clang.llvm.org/docs/LibASTMatchersReference.html" target="_blank" rel="noopener">AST Matcher Reference</a></li>
+<h3 id="ASTMatcher-相关"><a href="#ASTMatcher-相关" class="headerlink" title="ASTMatcher 相关"></a><code>ASTMatcher</code> 相关</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hatter110/article/details/107282775">Clang ASTMatcher 基础学习</a></li>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/LibASTMatchers.html">Matching the Clang AST</a></li>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/LibASTMatchersTutorial.html">Tutorial for building tools using LibTooling and LibASTMatchers</a></li>
+<li><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/LibASTMatchersReference.html">AST Matcher Reference</a></li>
 </ul>
-<h2 id="入门 -Clang-AST"><a href="# 入门 -Clang-AST" class="headerlink" title="入门 Clang AST"></a>入门 Clang AST</h2><p>Clang 是 LLVM 编译器框架的前端部分。Clang 首先运行预处理器以进行宏展开，然后将解析源代码 (词法分析、语法分析等) 并生成 AST (Abstract Syntax Tree，抽象语法树)。与 C/C++ 源代码相比，Clang AST 提供了更加便于分析和操作的程序表示形式，同时还具有便于找到 AST 节点所对应的源代码行列数的特性。事实上，Clang 使用的各种数据结构 (AST、CFG (Control Flow Graph，控制流图) 等) 都能轻易地转换回源代码，因此 Clang 特别适合用于进行静态代码分析、代码重构等工作。</p>
+<h2 id="入门-Clang-AST"><a href="#入门-Clang-AST" class="headerlink" title="入门 Clang AST"></a>入门 Clang AST</h2><p>Clang 是 LLVM 编译器框架的前端部分。Clang 首先运行预处理器以进行宏展开，然后将解析源代码 (词法分析、语法分析等) 并生成 AST (Abstract Syntax Tree，抽象语法树)。与 C&#x2F;C++ 源代码相比，Clang AST 提供了更加便于分析和操作的程序表示形式，同时还具有便于找到 AST 节点所对应的源代码行列数的特性。事实上，Clang 使用的各种数据结构 (AST、CFG (Control Flow Graph，控制流图) 等) 都能轻易地转换回源代码，因此 Clang 特别适合用于进行静态代码分析、代码重构等工作。</p>
 <p>如果需要在源代码层级上进行分析和修改，Clang 是比 LLVM (编译器后端) 更好的选择，因为使用 LLVM 进行分析需要使用与汇编代码类似的 LLVM IR (Intermediate Representation，中间表示)。</p>
-<h3 id="通过简单案例学习 -Clang-AST"><a href="# 通过简单案例学习 -Clang-AST" class="headerlink" title="通过简单案例学习 Clang AST"></a>通过简单案例学习 Clang AST</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.cc</span><br><span class="line">int f(int x) &#123;</span><br><span class="line">  int result &#x3D; (x &#x2F; 42);</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Clang by default is a frontend for many tools; -Xclang is used to pass</span><br><span class="line"># options directly to the C++ frontend.</span><br><span class="line">$ clang -Xclang -ast-dump -fsyntax-only test.cc</span><br><span class="line">TranslationUnitDecl 0x5aea0d0 &lt;&lt;invalid sloc&gt;&gt;</span><br><span class="line">... cutting out internal declarations of clang ...</span><br><span class="line">&#96;-FunctionDecl 0x5aeab50 &lt;test.cc:1:1, line:4:1&gt; f &#39;int (int)&#39;</span><br><span class="line">  |-ParmVarDecl 0x5aeaa90 &lt;line:1:7, col:11&gt; x &#39;int&#39;</span><br><span class="line">  &#96;-CompoundStmt 0x5aead88 &lt;col:14, line:4:1&gt;</span><br><span class="line">    |-DeclStmt 0x5aead10 &lt;line:2:3, col:24&gt;</span><br><span class="line">    | &#96;-VarDecl 0x5aeac10 &lt;col:3, col:23&gt; result &#39;int&#39;</span><br><span class="line">    |   &#96;-ParenExpr 0x5aeacf0 &lt;col:16, col:23&gt; &#39;int&#39;</span><br><span class="line">    |     &#96;-BinaryOperator 0x5aeacc8 &lt;col:17, col:21&gt; &#39;int&#39; &#39;&#x2F;&#39;</span><br><span class="line">    |       |-ImplicitCastExpr 0x5aeacb0 &lt;col:17&gt; &#39;int&#39; &lt;LValueToRValue&gt;</span><br><span class="line">    |       | &#96;-DeclRefExpr 0x5aeac68 &lt;col:17&gt; &#39;int&#39; lvalue ParmVar 0x5aeaa90 &#39;x&#39; &#39;int&#39;</span><br><span class="line">    |       &#96;-IntegerLiteral 0x5aeac90 &lt;col:21&gt; &#39;int&#39; 42</span><br><span class="line">    &#96;-ReturnStmt 0x5aead68 &lt;line:3:3, col:10&gt;</span><br><span class="line">      &#96;-ImplicitCastExpr 0x5aead50 &lt;col:10&gt; &#39;int&#39; &lt;LValueToRValue&gt;</span><br><span class="line">        &#96;-DeclRefExpr 0x5aead28 &lt;col:10&gt; &#39;int&#39; lvalue Var 0x5aeac10 &#39;result&#39; &#39;int&#39;</span><br></pre></td></tr></table></figure>
+<h3 id="通过简单案例学习-Clang-AST"><a href="#通过简单案例学习-Clang-AST" class="headerlink" title="通过简单案例学习 Clang AST"></a>通过简单案例学习 Clang AST</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.cc</span><br><span class="line">int f(int x) &#123;</span><br><span class="line">  int result = (x / 42);</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Clang by default is a frontend for many tools; -Xclang is used to pass</span><br><span class="line"># options directly to the C++ frontend.</span><br><span class="line">$ clang -Xclang -ast-dump -fsyntax-only test.cc</span><br><span class="line">TranslationUnitDecl 0x5aea0d0 &lt;&lt;invalid sloc&gt;&gt;</span><br><span class="line">... cutting out internal declarations of clang ...</span><br><span class="line">`-FunctionDecl 0x5aeab50 &lt;test.cc:1:1, line:4:1&gt; f &#x27;int (int)&#x27;</span><br><span class="line">  |-ParmVarDecl 0x5aeaa90 &lt;line:1:7, col:11&gt; x &#x27;int&#x27;</span><br><span class="line">  `-CompoundStmt 0x5aead88 &lt;col:14, line:4:1&gt;</span><br><span class="line">    |-DeclStmt 0x5aead10 &lt;line:2:3, col:24&gt;</span><br><span class="line">    | `-VarDecl 0x5aeac10 &lt;col:3, col:23&gt; result &#x27;int&#x27;</span><br><span class="line">    |   `-ParenExpr 0x5aeacf0 &lt;col:16, col:23&gt; &#x27;int&#x27;</span><br><span class="line">    |     `-BinaryOperator 0x5aeacc8 &lt;col:17, col:21&gt; &#x27;int&#x27; &#x27;/&#x27;</span><br><span class="line">    |       |-ImplicitCastExpr 0x5aeacb0 &lt;col:17&gt; &#x27;int&#x27; &lt;LValueToRValue&gt;</span><br><span class="line">    |       | `-DeclRefExpr 0x5aeac68 &lt;col:17&gt; &#x27;int&#x27; lvalue ParmVar 0x5aeaa90 &#x27;x&#x27; &#x27;int&#x27;</span><br><span class="line">    |       `-IntegerLiteral 0x5aeac90 &lt;col:21&gt; &#x27;int&#x27; 42</span><br><span class="line">    `-ReturnStmt 0x5aead68 &lt;line:3:3, col:10&gt;</span><br><span class="line">      `-ImplicitCastExpr 0x5aead50 &lt;col:10&gt; &#x27;int&#x27; &lt;LValueToRValue&gt;</span><br><span class="line">        `-DeclRefExpr 0x5aead28 &lt;col:10&gt; &#x27;int&#x27; lvalue Var 0x5aeac10 &#x27;result&#x27; &#x27;int&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>可以看出：</p>
 <ul>
@@ -505,9 +266,9 @@
 <li>在这个例子中，第一个来自用户代码的节点是 <code>FunctionDecl</code> 。</li>
 <li><code>f</code> 的函数体是一个复合语句 <code>CompoundStmt</code>，其子节点是变量 <code>result</code> 的声明，以及返回语句 <code>ReturnStmt</code> 。</li>
 </ul>
-<h3 id="通过课程 -Slides- 学习 -Clang-AST"><a href="# 通过课程 -Slides- 学习 -Clang-AST" class="headerlink" title="通过课程 Slides 学习 Clang AST"></a>通过课程 Slides 学习 Clang AST</h3><p>这份 <a href="http://swtv.kaist.ac.kr/courses/cs492-fall18/part1-coverage/lec7-Clang-tutorial.pdf" target="_blank" rel="noopener">Clang Tutorial Slides</a> 来自 KAIST (韩国科学技术院) 的 Moonzoo Kim 教授的课程 <a href="http://swtv.kaist.ac.kr/courses/cs492-fall18" target="_blank" rel="noopener">CS492A Automated Software Analysis, Fall 18</a>，内含详细的解释和丰富的图例，<strong>非常推荐阅读</strong>。</p>
-<h2 id="Clang-AST- 的类型"><a href="#Clang-AST- 的类型" class="headerlink" title="Clang AST 的类型"></a>Clang AST 的类型</h2><p>Clang AST 中大部分类型都可以根据其名称得知其含义。也可以在搜索引擎中搜索 “clang functiondecl” 等，以找到对应类型的详细文档。</p>
-<h3 id="核心基本类型"><a href="# 核心基本类型" class="headerlink" title="核心基本类型"></a>核心基本类型 </h3><p> 下面是 Clang AST 的三大核心基本类型，以及它们的子类的例子：</p>
+<h3 id="通过课程-Slides-学习-Clang-AST"><a href="#通过课程-Slides-学习-Clang-AST" class="headerlink" title="通过课程 Slides 学习 Clang AST"></a>通过课程 Slides 学习 Clang AST</h3><p>这份 <a target="_blank" rel="noopener" href="http://swtv.kaist.ac.kr/courses/cs492-fall18/part1-coverage/lec7-Clang-tutorial.pdf">Clang Tutorial Slides</a> 来自 KAIST (韩国科学技术院) 的 Moonzoo Kim 教授的课程 <a target="_blank" rel="noopener" href="http://swtv.kaist.ac.kr/courses/cs492-fall18">CS492A Automated Software Analysis, Fall 18</a>，内含详细的解释和丰富的图例，<strong>非常推荐阅读</strong>。</p>
+<h2 id="Clang-AST-的类型"><a href="#Clang-AST-的类型" class="headerlink" title="Clang AST 的类型"></a>Clang AST 的类型</h2><p>Clang AST 中大部分类型都可以根据其名称得知其含义。也可以在搜索引擎中搜索 “clang functiondecl” 等，以找到对应类型的详细文档。</p>
+<h3 id="核心基本类型"><a href="#核心基本类型" class="headerlink" title="核心基本类型"></a>核心基本类型</h3><p>下面是 Clang AST 的三大核心基本类型，以及它们的子类的例子：</p>
 <ul>
 <li><code>Decl</code> (声明)<ul>
 <li><code>FunctionDecl</code> (函数声明)</li>
@@ -535,7 +296,7 @@
 <li><code>SourceManager</code></li>
 <li>AST 的入口节点: <code>TranslationUnitDecl* getTranslationUnitDecl()</code></li>
 </ul>
-<h3 id="胶水类型 -Glue-Classes"><a href="# 胶水类型 -Glue-Classes" class="headerlink" title="胶水类型 (Glue Classes)"></a>胶水类型 (Glue Classes)</h3><ul>
+<h3 id="胶水类型-Glue-Classes"><a href="#胶水类型-Glue-Classes" class="headerlink" title="胶水类型 (Glue Classes)"></a>胶水类型 (Glue Classes)</h3><ul>
 <li><code>DeclContext</code><ul>
 <li>包含其他 <code>Decl</code> 的 <code>Decl</code> 需要继承此类。</li>
 </ul>
@@ -550,8 +311,8 @@
 </ul>
 </li>
 </ul>
-<h2 id="访问 -AST- 的方法"><a href="# 访问 -AST- 的方法" class="headerlink" title="访问 AST 的方法"></a>访问 AST 的方法</h2><p>Clang 主要提供了 2 种对 AST 进行访问的类：<code>RecursiveASTVisitor</code> 和 <code>ASTMatcher</code>。</p>
-<h3 id="RecursiveASTVisitor"><a href="#RecursiveASTVisitor" class="headerlink" title="RecursiveASTVisitor"></a><code>RecursiveASTVisitor</code></h3><p>建议结合 <a href="https://clang.llvm.org/docs/RAVFrontendAction.html" target="_blank" rel="noopener">How to write RecursiveASTVisitor based ASTFrontendActions.</a> 中的代码样例来学习 <code>RecursiveASTVisitor</code>，并尝试使用 cmake 编译并运行样例程序。</p>
+<h2 id="访问-AST-的方法"><a href="#访问-AST-的方法" class="headerlink" title="访问 AST 的方法"></a>访问 AST 的方法</h2><p>Clang 主要提供了 2 种对 AST 进行访问的类：<code>RecursiveASTVisitor</code> 和 <code>ASTMatcher</code>。</p>
+<h3 id="RecursiveASTVisitor"><a href="#RecursiveASTVisitor" class="headerlink" title="RecursiveASTVisitor"></a><code>RecursiveASTVisitor</code></h3><p>建议结合 <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/RAVFrontendAction.html">How to write RecursiveASTVisitor based ASTFrontendActions.</a> 中的代码样例来学习 <code>RecursiveASTVisitor</code>，并尝试使用 cmake 编译并运行样例程序。</p>
 <ul>
 <li>特性<ul>
 <li>由用户所关心的类型触发 (例如可以访问所有<code>Stmt</code>)。</li>
@@ -560,7 +321,7 @@
 </li>
 <li>使用方法<ul>
 <li><code>TraverseDecl(Decl *x)</code> 用于遍历以 <code>x</code> 为根的 AST。它将自动调用 <code>TraverseFoo(Foo *x)</code> ，进而调用 <code>WalkUpFromFoo(x)</code> ，然后递归地以前序或后序的方式深度优先遍历 <code>x</code> 的子节点。 <code>TraverseStmt(Stmt *x)</code> 和 <code>TraverseType(QualType x)</code> 函数的功能类似。</li>
-<li><code>WalkUpFromFoo(Foo *x)</code> 并不尝试访问 <code>x</code> 的子节点，而是向上搜索节点 <code>x</code> 的类型层级，直到达到 AST 的核心基本类型之一 (<code>Stmt</code>/<code>Decl</code>/<code>Type</code>) 。它首先调用 <code>WalkUpFromBar(x)</code> (<code>Bar</code> 是 <code>Foo</code> 的直接父类 (如果存在))，然后调用 <code>VisitFoo(x)</code>。</li>
+<li><code>WalkUpFromFoo(Foo *x)</code> 并不尝试访问 <code>x</code> 的子节点，而是向上搜索节点 <code>x</code> 的类型层级，直到达到 AST 的核心基本类型之一 (<code>Stmt</code>&#x2F;<code>Decl</code>&#x2F;<code>Type</code>) 。它首先调用 <code>WalkUpFromBar(x)</code> (<code>Bar</code> 是 <code>Foo</code> 的直接父类 (如果存在))，然后调用 <code>VisitFoo(x)</code>。</li>
 <li><code>VisitFoo(Foo *x)</code> 接受类型为 <code>Foo</code> 的节点 <code>x</code> ，并调用可被用户覆盖的虚函数来访问该节点 (对访问到的具体某类节点的操作逻辑应当写在这个函数里)。</li>
 </ul>
 </li>
@@ -577,7 +338,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="ASTMatcher"><a href="#ASTMatcher" class="headerlink" title="ASTMatcher"></a><code>ASTMatcher</code></h3><p>建议结合 <a href="https://clang.llvm.org/docs/LibASTMatchersTutorial.html" target="_blank" rel="noopener">Tutorial for building tools using LibTooling and LibASTMatchers</a> 中的代码样例来学习 <code>ASTMatcher</code>，并尝试使用 cmake 编译并运行样例程序。</p>
+<h3 id="ASTMatcher"><a href="#ASTMatcher" class="headerlink" title="ASTMatcher"></a><code>ASTMatcher</code></h3><p>建议结合 <a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/LibASTMatchersTutorial.html">Tutorial for building tools using LibTooling and LibASTMatchers</a> 中的代码样例来学习 <code>ASTMatcher</code>，并尝试使用 cmake 编译并运行样例程序。</p>
 <ul>
 <li>特性<ul>
 <li>本质上是一种 DSL (Domain Specific Language，领域特定语言)。</li>
@@ -598,333 +359,182 @@
 </li>
 </ul>
 
-      
     </div>
 
     
-
     
     
-    
-
-    
-
-    
-      
-    
-    
-
-    
-      <div>
         
 
-
-
-
-  
-
-
-
+<div>
 <ul class="post-copyright">
   <li class="post-copyright-author">
-    <strong>Post author:  </strong>jywhy6</li>
+    <strong>Post author:  </strong>jywhy6
+  </li>
   <li class="post-copyright-link">
     <strong>Post link: </strong>
-    
-    <a href="https://jywhy6.github.io/2020/11/27/clang-notes/" title="LLVM 编译器前端 Clang AST & API 学习笔记">https://jywhy6.github.io/2020/11/27/clang-notes/</a>
+    <a href="https://jywhy6.github.io/2020/11/27/clang-notes/" title="LLVM 编译器前端 Clang AST &amp; API 学习笔记">https://jywhy6.github.io/2020/11/27/clang-notes/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
 </ul>
-
-      </div>
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" rel="tag"># 程序分析</a>
-          
-            <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" rel="tag"># 软件工程</a>
-          
-            <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" rel="tag"># 编译器</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/12/21/decrypt-bm2dxum/" rel="next" title="beatmania IIDX ULTIMATE MOBILE 游戏资源解密">
-                <i class="fa fa-chevron-left"></i> beatmania IIDX ULTIMATE MOBILE 游戏资源解密
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/12/11/klee-notes/" rel="prev" title="符号执行引擎 KLEE 学习笔记">
-                符号执行引擎 KLEE 学习笔记 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
-
-  
-    <div class="comments" id="gitalk-container">
-    </div>
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <p class="site-author-name" itemprop="name">jywhy6</p>
-              <div class="site-description motion-element" itemprop="description"></div>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives">
-                
-                    <span class="site-state-item-count">4</span>
-                    <span class="site-state-item-name">posts</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                      <a href="/categories/%20%7C%7C%20th">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">2</span>
-                    <span class="site-state-item-name">categories</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                      <a href="/tags/%20%7C%7C%20tags">
-                    
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">6</span>
-                    <span class="site-state-item-name">tags</span>
-                  </a>
-                </div>
-              
-            </nav>
-          
-
-          
-
-          
-
-          
-
-          
-             <div class="cc-license motion-element" itemprop="license">
-              
-              
-                
-              
-              
-              
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
-             </div>
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </div>
-
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.</span> <span class="nav-text">参考资料 </span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#课程 -Slides"><span class="nav-number">1.1.</span> <span class="nav-text"> 课程 Slides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-AST- 相关"><span class="nav-number">1.2.</span> <span class="nav-text">Clang AST 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor- 相关"><span class="nav-number">1.3.</span> <span class="nav-text">RecursiveASTVisitor 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher- 相关"><span class="nav-number">1.4.</span> <span class="nav-text">ASTMatcher 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入门 -Clang-AST"><span class="nav-number">2.</span> <span class="nav-text">入门 Clang AST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过简单案例学习 -Clang-AST"><span class="nav-number">2.1.</span> <span class="nav-text">通过简单案例学习 Clang AST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过课程 -Slides- 学习 -Clang-AST"><span class="nav-number">2.2.</span> <span class="nav-text">通过课程 Slides 学习 Clang AST</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-AST- 的类型"><span class="nav-number">3.</span> <span class="nav-text">Clang AST 的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心基本类型"><span class="nav-number">3.1.</span> <span class="nav-text">核心基本类型 </span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTContext"><span class="nav-number">3.2.</span> <span class="nav-text">ASTContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#胶水类型 -Glue-Classes"><span class="nav-number">3.3.</span> <span class="nav-text">胶水类型 (Glue Classes)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问 -AST- 的方法"><span class="nav-number">4.</span> <span class="nav-text">访问 AST 的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor"><span class="nav-number">4.1.</span> <span class="nav-text">RecursiveASTVisitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher"><span class="nav-number">4.2.</span> <span class="nav-text">ASTMatcher</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-  
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
-  <span class="with-love" id="animate">
-    <i class="fa fa-flask"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">jywhy6</span>
-
-  
-
-  
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.1.1</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
-
-
-
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/" rel="tag"># 程序分析</a>
+              <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/" rel="tag"># 编译器</a>
+              <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" rel="tag"># 软件工程</a>
+          </div>
 
         
 
 
-
-
-
-
-
-
         
-      </div>
-    </footer>
-
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/21/decrypt-bm2dxum/" rel="prev" title="beatmania IIDX ULTIMATE MOBILE 游戏资源解密">
+      <i class="fa fa-chevron-left"></i> beatmania IIDX ULTIMATE MOBILE 游戏资源解密
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/11/klee-notes/" rel="next" title="符号执行引擎 KLEE 学习笔记">
+      符号执行引擎 KLEE 学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
     
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
-    
-
-    
-  </div>
-
+  </article>
+  
+  
   
 
+
+
+          </div>
+          
+
 <script>
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
   }
 </script>
 
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">1.</span> <span class="nav-text">参考资料</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B-Slides"><span class="nav-number">1.1.</span> <span class="nav-text">课程 Slides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clang-AST-%E7%9B%B8%E5%85%B3"><span class="nav-number">1.2.</span> <span class="nav-text">Clang AST 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor-%E7%9B%B8%E5%85%B3"><span class="nav-number">1.3.</span> <span class="nav-text">RecursiveASTVisitor 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher-%E7%9B%B8%E5%85%B3"><span class="nav-number">1.4.</span> <span class="nav-text">ASTMatcher 相关</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A5%E9%97%A8-Clang-AST"><span class="nav-number">2.</span> <span class="nav-text">入门 Clang AST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E6%A1%88%E4%BE%8B%E5%AD%A6%E4%B9%A0-Clang-AST"><span class="nav-number">2.1.</span> <span class="nav-text">通过简单案例学习 Clang AST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E8%AF%BE%E7%A8%8B-Slides-%E5%AD%A6%E4%B9%A0-Clang-AST"><span class="nav-number">2.2.</span> <span class="nav-text">通过课程 Slides 学习 Clang AST</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-AST-%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">Clang AST 的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">核心基本类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTContext"><span class="nav-number">3.2.</span> <span class="nav-text">ASTContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%B6%E6%B0%B4%E7%B1%BB%E5%9E%8B-Glue-Classes"><span class="nav-number">3.3.</span> <span class="nav-text">胶水类型 (Glue Classes)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE-AST-%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">访问 AST 的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RecursiveASTVisitor"><span class="nav-number">4.1.</span> <span class="nav-text">RecursiveASTVisitor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASTMatcher"><span class="nav-number">4.2.</span> <span class="nav-text">ASTMatcher</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">jywhy6</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jywhy6</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">27k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">45 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
 
 
 
@@ -932,6 +542,29 @@
 
 
 
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
 
 
 
@@ -951,119 +584,6 @@
 
 
 
-
-  
-  <script src="/lib/jquery/index.js?v=2.1.3"></script>
-
-  
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-
-  
-  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
-
-
-  
-
-
-  <script src="/js/utils.js?v=7.1.0"></script>
-
-  <script src="/js/motion.js?v=7.1.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/schemes/muse.js?v=7.1.0"></script>
-
-
-
-
-  
-  <script src="/js/scrollspy.js?v=7.1.0"></script>
-<script src="/js/post-details.js?v=7.1.0"></script>
-
-
-
-  
-
-
-  <script src="/js/next-boot.js?v=7.1.0"></script>
-
-
-  
-
-  
-
-  
-
-  
-
-
-  
-    
-
-<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-
-
-
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css"/>
-
-
-
-<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
-
-<script>
-  var gitalk = new Gitalk({
-    clientID: '3e7b18c2937adbb36554',
-    clientSecret: '59d417e05ca2d04bc67692b9c3509b753bd22d10',
-    repo: 'jywhy6.github.io',
-    owner: 'jywhy6',
-    admin: ['jywhy6'],
-    id: md5(location.pathname),
-    
-      language: 'en',
-    
-    distractionFreeMode: 'true'
-  });
-  gitalk.render('gitalk-container');
-</script>
-
-  
-
-
-  
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   
 
